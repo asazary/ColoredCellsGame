@@ -107,53 +107,51 @@
 
         private void ApplyLevel1(int row, int col, List<CellCoords> changedCells)
         {
-            for (var j = 0; j < Size; j++)
+            var toChange = new (int r, int c)[] { (row, col - 1), (row, col + 1) };
+            foreach (var (r, c) in toChange)
             {
-                if (j == col) continue;
-                Field[row, j] = AllCellFuncs[1](Field[row, j], ColorsCount);
-                changedCells.Add(new CellCoords(row, j));
+                if (!IsCoordCorrect(r, c)) continue;
+                Field[r, c] = AllCellFuncs[1](Field[r, c], ColorsCount);
+                changedCells.Add(new CellCoords(r, c));
             }
         }
 
         private void ApplyLevel2(int row, int col, List<CellCoords> changedCells)
         {
-            for (var i = 0; i < Size; i++)
+            var toChange = new (int r, int c)[] { (row - 1, col), (row + 1, col) };
+            foreach (var (r, c) in toChange)
             {
-                if (i == row) continue;
-                Field[i, col] = AllCellFuncs[2](Field[i, col], ColorsCount);
-                changedCells.Add(new CellCoords(i, col));
+                if (!IsCoordCorrect(r, c)) continue;
+                Field[r, c] = AllCellFuncs[2](Field[r, c], ColorsCount);
+                changedCells.Add(new CellCoords(r, c));
             }
         }
 
         private void ApplyLevel3(int row, int col, List<CellCoords> changedCells)
         {
-            for (var i = 1; row - i >= 0 && col + i < Size; i++)
+            var toChange = new (int r, int c)[] { (row - 1, col + 1), (row + 1, col - 1) };
+            foreach (var (r, c) in toChange)
             {
-                Field[row - i, col + i] = AllCellFuncs[3](Field[row - i, col + i], ColorsCount);
-                changedCells.Add(new CellCoords(row - i, col + i));
+                if (!IsCoordCorrect(r, c)) continue;
+                Field[r, c] = AllCellFuncs[3](Field[r, c], ColorsCount);
+                changedCells.Add(new CellCoords(r, c));
             }
-                
-            for (var i = 1; row + i < Size && col - i >= 0; i++)
-            {
-                Field[row + i, col - i] = AllCellFuncs[3](Field[row + i, col - i], ColorsCount);
-                changedCells.Add(new CellCoords(row + i, col - i));
-            }
-                
+
         }
 
         private void ApplyLevel4(int row, int col, List<CellCoords> changedCells)
         {
-            for (var i = 1; row + i < Size && col + i < Size; i++)
+            var toChange = new (int r, int c)[] { (row + 1, col + 1), (row - 1, col - 1) };
+            foreach (var (r, c) in toChange)
             {
-                Field[row + i, col + i] = AllCellFuncs[4](Field[row + i, col + i], ColorsCount);
-                changedCells.Add(new CellCoords(row + i, col + i));
+                if (!IsCoordCorrect(r, c)) continue;
+                Field[r, c] = AllCellFuncs[4](Field[r, c], ColorsCount);
+                changedCells.Add(new CellCoords(r, c));
             }
-                
-            for (var i = 1; row - i >= 0 && col - i >= 0; i++)
-            {
-                Field[row - i, col - i] = AllCellFuncs[4](Field[row - i, col - i], ColorsCount);
-                changedCells.Add(new CellCoords(row - i, col - i));
-            }                
         }
+
+        private bool IsCoordCorrect(int row, int col) =>
+            row >= 0 && row < Size && col >= 0 && col < Size;
+        
     }
 }
